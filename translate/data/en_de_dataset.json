@@ -1,0 +1,399 @@
+{
+  "description": "Public English-German translation dataset for testing",
+  "source": "Public domain common phrases",
+  "num_pairs": 98,
+  "pairs": [
+    {
+      "en": "Hello, how are you?",
+      "de": "Hallo, wie geht es dir?"
+    },
+    {
+      "en": "Good morning.",
+      "de": "Guten Morgen."
+    },
+    {
+      "en": "Good evening.",
+      "de": "Guten Abend."
+    },
+    {
+      "en": "Thank you very much.",
+      "de": "Vielen Dank."
+    },
+    {
+      "en": "You're welcome.",
+      "de": "Bitte schön."
+    },
+    {
+      "en": "Excuse me.",
+      "de": "Entschuldigung."
+    },
+    {
+      "en": "I'm sorry.",
+      "de": "Es tut mir leid."
+    },
+    {
+      "en": "See you later.",
+      "de": "Bis später."
+    },
+    {
+      "en": "Have a nice day.",
+      "de": "Einen schönen Tag noch."
+    },
+    {
+      "en": "What is your name?",
+      "de": "Wie heißt du?"
+    },
+    {
+      "en": "What time is it?",
+      "de": "Wie spät ist es?"
+    },
+    {
+      "en": "It is ten o'clock.",
+      "de": "Es ist zehn Uhr."
+    },
+    {
+      "en": "Today is Monday.",
+      "de": "Heute ist Montag."
+    },
+    {
+      "en": "Tomorrow is Tuesday.",
+      "de": "Morgen ist Dienstag."
+    },
+    {
+      "en": "I have two dogs.",
+      "de": "Ich habe zwei Hunde."
+    },
+    {
+      "en": "She has three cats.",
+      "de": "Sie hat drei Katzen."
+    },
+    {
+      "en": "Where is the train station?",
+      "de": "Wo ist der Bahnhof?"
+    },
+    {
+      "en": "How much does this cost?",
+      "de": "Wie viel kostet das?"
+    },
+    {
+      "en": "Can you help me?",
+      "de": "Können Sie mir helfen?"
+    },
+    {
+      "en": "I don't understand.",
+      "de": "Ich verstehe nicht."
+    },
+    {
+      "en": "Do you speak English?",
+      "de": "Sprechen Sie Englisch?"
+    },
+    {
+      "en": "I speak a little German.",
+      "de": "Ich spreche ein bisschen Deutsch."
+    },
+    {
+      "en": "Where is the bathroom?",
+      "de": "Wo ist die Toilette?"
+    },
+    {
+      "en": "I would like a coffee.",
+      "de": "Ich möchte einen Kaffee."
+    },
+    {
+      "en": "The restaurant is very good.",
+      "de": "Das Restaurant ist sehr gut."
+    },
+    {
+      "en": "How do I get to the airport?",
+      "de": "Wie komme ich zum Flughafen?"
+    },
+    {
+      "en": "Turn left at the corner.",
+      "de": "Biegen Sie an der Ecke links ab."
+    },
+    {
+      "en": "Go straight ahead.",
+      "de": "Gehen Sie geradeaus."
+    },
+    {
+      "en": "The weather is nice today.",
+      "de": "Das Wetter ist heute schön."
+    },
+    {
+      "en": "It is raining outside.",
+      "de": "Es regnet draußen."
+    },
+    {
+      "en": "The sun is shining.",
+      "de": "Die Sonne scheint."
+    },
+    {
+      "en": "The sky is blue.",
+      "de": "Der Himmel ist blau."
+    },
+    {
+      "en": "This is my brother.",
+      "de": "Das ist mein Bruder."
+    },
+    {
+      "en": "She is my sister.",
+      "de": "Sie ist meine Schwester."
+    },
+    {
+      "en": "My mother is a teacher.",
+      "de": "Meine Mutter ist Lehrerin."
+    },
+    {
+      "en": "His father works in Berlin.",
+      "de": "Sein Vater arbeitet in Berlin."
+    },
+    {
+      "en": "I am hungry.",
+      "de": "Ich habe Hunger."
+    },
+    {
+      "en": "The food is delicious.",
+      "de": "Das Essen ist lecker."
+    },
+    {
+      "en": "I would like some water.",
+      "de": "Ich möchte etwas Wasser."
+    },
+    {
+      "en": "The bread is fresh.",
+      "de": "Das Brot ist frisch."
+    },
+    {
+      "en": "Do you have coffee?",
+      "de": "Haben Sie Kaffee?"
+    },
+    {
+      "en": "I am a student.",
+      "de": "Ich bin Student."
+    },
+    {
+      "en": "She works at a hospital.",
+      "de": "Sie arbeitet in einem Krankenhaus."
+    },
+    {
+      "en": "The school is closed today.",
+      "de": "Die Schule ist heute geschlossen."
+    },
+    {
+      "en": "I have a meeting tomorrow.",
+      "de": "Ich habe morgen ein Treffen."
+    },
+    {
+      "en": "My house is small.",
+      "de": "Mein Haus ist klein."
+    },
+    {
+      "en": "The apartment is very clean.",
+      "de": "Die Wohnung ist sehr sauber."
+    },
+    {
+      "en": "I need to go shopping.",
+      "de": "Ich muss einkaufen gehen."
+    },
+    {
+      "en": "The car is in the garage.",
+      "de": "Das Auto ist in der Garage."
+    },
+    {
+      "en": "I am very happy.",
+      "de": "Ich bin sehr glücklich."
+    },
+    {
+      "en": "She is tired.",
+      "de": "Sie ist müde."
+    },
+    {
+      "en": "He is sick today.",
+      "de": "Er ist heute krank."
+    },
+    {
+      "en": "We are excited.",
+      "de": "Wir sind aufgeregt."
+    },
+    {
+      "en": "The book is red.",
+      "de": "Das Buch ist rot."
+    },
+    {
+      "en": "Her dress is blue.",
+      "de": "Ihr Kleid ist blau."
+    },
+    {
+      "en": "The tree is tall.",
+      "de": "Der Baum ist groß."
+    },
+    {
+      "en": "This is a beautiful painting.",
+      "de": "Das ist ein schönes Gemälde."
+    },
+    {
+      "en": "I love to read books.",
+      "de": "Ich liebe es, Bücher zu lesen."
+    },
+    {
+      "en": "She plays the piano very well.",
+      "de": "Sie spielt sehr gut Klavier."
+    },
+    {
+      "en": "We are going to the park.",
+      "de": "Wir gehen in den Park."
+    },
+    {
+      "en": "The children are playing outside.",
+      "de": "Die Kinder spielen draußen."
+    },
+    {
+      "en": "It is very cold in winter.",
+      "de": "Es ist sehr kalt im Winter."
+    },
+    {
+      "en": "Spring is my favorite season.",
+      "de": "Frühling ist meine Lieblingsjahreszeit."
+    },
+    {
+      "en": "I need to buy some bread.",
+      "de": "Ich muss Brot kaufen."
+    },
+    {
+      "en": "The train leaves at eight.",
+      "de": "Der Zug fährt um acht ab."
+    },
+    {
+      "en": "Can I have the bill, please?",
+      "de": "Kann ich bitte die Rechnung haben?"
+    },
+    {
+      "en": "This shirt is too expensive.",
+      "de": "Dieses Hemd ist zu teuer."
+    },
+    {
+      "en": "I will call you tomorrow.",
+      "de": "Ich rufe dich morgen an."
+    },
+    {
+      "en": "Please wait a moment.",
+      "de": "Bitte warten Sie einen Moment."
+    },
+    {
+      "en": "The movie was very interesting.",
+      "de": "Der Film war sehr interessant."
+    },
+    {
+      "en": "I forgot my keys at home.",
+      "de": "Ich habe meine Schlüssel zu Hause vergessen."
+    },
+    {
+      "en": "She is learning to cook.",
+      "de": "Sie lernt kochen."
+    },
+    {
+      "en": "We visited Germany last year.",
+      "de": "Wir haben letztes Jahr Deutschland besucht."
+    },
+    {
+      "en": "The concert was amazing.",
+      "de": "Das Konzert war fantastisch."
+    },
+    {
+      "en": "I don't like this color.",
+      "de": "Ich mag diese Farbe nicht."
+    },
+    {
+      "en": "He lives in a big city.",
+      "de": "Er lebt in einer großen Stadt."
+    },
+    {
+      "en": "The music is too loud.",
+      "de": "Die Musik ist zu laut."
+    },
+    {
+      "en": "Can you repeat that, please?",
+      "de": "Können Sie das bitte wiederholen?"
+    },
+    {
+      "en": "I arrived late to the meeting.",
+      "de": "Ich bin zu spät zum Treffen gekommen."
+    },
+    {
+      "en": "The garden is full of flowers.",
+      "de": "Der Garten ist voller Blumen."
+    },
+    {
+      "en": "She speaks three languages.",
+      "de": "Sie spricht drei Sprachen."
+    },
+    {
+      "en": "We need to hurry up.",
+      "de": "Wir müssen uns beeilen."
+    },
+    {
+      "en": "The door is locked.",
+      "de": "Die Tür ist verschlossen."
+    },
+    {
+      "en": "I'm looking for my phone.",
+      "de": "Ich suche mein Telefon."
+    },
+    {
+      "en": "The baby is sleeping.",
+      "de": "Das Baby schläft."
+    },
+    {
+      "en": "This is a difficult question.",
+      "de": "Das ist eine schwierige Frage."
+    },
+    {
+      "en": "I agree with you.",
+      "de": "Ich stimme dir zu."
+    },
+    {
+      "en": "The street is very busy.",
+      "de": "Die Straße ist sehr belebt."
+    },
+    {
+      "en": "I prefer tea over coffee.",
+      "de": "Ich bevorzuge Tee über Kaffee."
+    },
+    {
+      "en": "The store opens at nine.",
+      "de": "Das Geschäft öffnet um neun."
+    },
+    {
+      "en": "She is wearing a hat.",
+      "de": "Sie trägt einen Hut."
+    },
+    {
+      "en": "We should leave soon.",
+      "de": "Wir sollten bald gehen."
+    },
+    {
+      "en": "The lake is very deep.",
+      "de": "Der See ist sehr tief."
+    },
+    {
+      "en": "I enjoy walking in the forest.",
+      "de": "Ich genieße es, im Wald spazieren zu gehen."
+    },
+    {
+      "en": "The computer is not working.",
+      "de": "Der Computer funktioniert nicht."
+    },
+    {
+      "en": "Please close the window.",
+      "de": "Bitte schließen Sie das Fenster."
+    },
+    {
+      "en": "He is a good friend.",
+      "de": "Er ist ein guter Freund."
+    },
+    {
+      "en": "The light is broken.",
+      "de": "Das Licht ist kaputt."
+    }
+  ]
+}
