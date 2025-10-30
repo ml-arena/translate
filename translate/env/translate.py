@@ -11,6 +11,12 @@ import json
 from typing import Optional, Dict, Any
 from translate import PKG_DIR
 
+try:
+    from sacrebleu import corpus_bleu
+    BLEU_AVAILABLE = True
+except ImportError:
+    BLEU_AVAILABLE = False
+
 
 class TranslateEnv:
     """
@@ -106,45 +112,36 @@ class TranslateEnv:
 
     def evaluate(self, predictions: np.ndarray, true_labels: np.ndarray) -> float:
         """
-        Calculate translation quality using BLEU-like token overlap metric
+        Calculate translation quality using BLEU score
 
-        This is a simplified evaluation metric based on word overlap.
-        In production, you would use proper BLEU, chrF, or other MT metrics.
+        Uses sacrebleu library for proper BLEU calculation with standard settings.
+        BLEU score measures n-gram overlap between predictions and references.
 
         Args:
             predictions: Array of predicted German translations
             true_labels: Array of reference German translations
 
         Returns:
-            Score between 0 and 1 (higher is better)
+            BLEU score between 0 and 100 (higher is better)
         """
         if len(predictions) == 0:
             return 0.0
 
-        scores = []
-        for pred, ref in zip(predictions, true_labels):
-            # Convert to lowercase and tokenize by whitespace
-            pred_tokens = set(str(pred).lower().split())
-            ref_tokens = set(str(ref).lower().split())
+        if not BLEU_AVAILABLE:
+            raise RuntimeError(
+                "sacrebleu is required for BLEU evaluation but not installed. "
+                "Install with: pip install sacrebleu"
+            )
 
-            if len(ref_tokens) == 0:
-                scores.append(0.0)
-                continue
+        # Convert numpy arrays to lists of strings
+        pred_strings = [str(pred) for pred in predictions]
+        ref_strings = [[str(ref)] for ref in true_labels]  # sacrebleu expects list of references per prediction
 
-            # Calculate token overlap (simplified BLEU-like metric)
-            overlap = len(pred_tokens & ref_tokens)
-            precision = overlap / len(pred_tokens) if len(pred_tokens) > 0 else 0
-            recall = overlap / len(ref_tokens)
+        # Calculate corpus BLEU score
+        # sacrebleu returns score out of 100
+        bleu = corpus_bleu(pred_strings, ref_strings)
 
-            # F1 score
-            if precision + recall > 0:
-                f1 = 2 * (precision * recall) / (precision + recall)
-            else:
-                f1 = 0.0
-
-            scores.append(f1)
-
-        return float(np.mean(scores))
+        return float(bleu.score)
 
     def reset(self):
         """Reset environment for new set of episodes"""

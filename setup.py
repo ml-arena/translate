@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="translate",
-    version="0.1",
+    version="0.2",
     packages=find_packages(),
     include_package_data=True,
     package_data={
@@ -10,5 +10,6 @@ setup(
     },
     install_requires=[
         "numpy>=1.20.0",
+        "sacrebleu>=2.0.0",
     ],
 )

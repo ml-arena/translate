@@ -4,12 +4,12 @@ A predict-only supervised learning environment for evaluating pre-trained transl
 
 ## Overview
 
-This environment tests agents on English-to-German translation tasks WITHOUT providing training data. Agents must use pre-trained models (e.g., from Hugging Face transformers) to translate English sentences into German.
+This environment tests agents on English-to-German translation tasks WITHOUT providing training data. Agents must use pre-trained models (e.g., PyTorch models) to translate English sentences into German.
 
 **Key Features:**
 - **Predict-only workflow:** No training data provided during competition
 - **Public dataset:** 98 common English-German sentence pairs for testing
-- **Simple evaluation:** Token overlap metric (F1 score)
+- **BLEU evaluation:** Standard MT metric using sacrebleu library
 - **Production-ready:** Replace with private dataset for ML-Arena competitions
 
 ## Installation
@@ -60,7 +60,7 @@ task = env.get_next_task()
 **`evaluate(predictions, true_labels)` → float**
 ```python
 score = env.evaluate(predictions, references)
-# Returns: F1 score between 0 and 1 (token overlap metric)
+# Returns: BLEU score between 0 and 100 (higher is better)
 ```
 
 **`reset()`**
@@ -74,16 +74,26 @@ if env.is_complete():
     print("All tasks completed")
 ```
 
-## Agent Example
+## Agent Examples
+
+### Example 1: PyTorch Pre-trained Model
 
 Agents receive English sentences and must return German translations:
 
 ```python
+import torch
+import numpy as np
+
 class TranslationAgent:
     def __init__(self):
-        # Load pre-trained model (e.g., from Hugging Face)
-        from transformers import pipeline
-        self.translator = pipeline("translation_en_to_de", model="Helsinki-NLP/opus-mt-en-de")
+        # Load your pre-trained PyTorch translation model
+        # This could be a model trained offline or downloaded
+        self.model = torch.load('path/to/translation_model.pt')
+        self.model.eval()
+
+        # Or load from state dict
+        # self.model = MyTranslationModel()
+        # self.model.load_state_dict(torch.load('model_weights.pth'))
 
     def reset(self):
         pass  # No state to reset
@@ -91,11 +101,71 @@ class TranslationAgent:
     def predict(self, X_test: np.ndarray) -> np.ndarray:
         """Translate English sentences to German"""
         translations = []
+
+        with torch.no_grad():
+            for sentence in X_test:
+                # Tokenize and prepare input
+                input_tensor = self.tokenize(sentence)
+
+                # Generate translation
+                output = self.model(input_tensor)
+                translation = self.decode(output)
+
+                translations.append(translation)
+
+        return np.array(translations, dtype=object)
+
+    def tokenize(self, sentence):
+        # Implement your tokenization logic
+        pass
+
+    def decode(self, output):
+        # Implement your decoding logic
+        pass
+```
+
+### Example 2: Random Baseline (for testing)
+
+A simple random baseline agent for testing the environment:
+
+```python
+import numpy as np
+import random
+
+class RandomAgent:
+    """Random baseline agent that generates random German words"""
+
+    def __init__(self):
+        # Common German words for random baseline
+        self.german_words = [
+            "Hallo", "Guten", "Morgen", "Tag", "Abend", "Nacht",
+            "danke", "bitte", "ja", "nein", "gut", "sehr",
+            "ist", "der", "die", "das", "und", "oder",
+            "ich", "du", "er", "sie", "wir", "ihr",
+            "haben", "sein", "werden", "können", "müssen",
+            "hier", "dort", "heute", "morgen", "gestern"
+        ]
+
+    def reset(self):
+        pass  # No state to reset
+
+    def predict(self, X_test: np.ndarray) -> np.ndarray:
+        """Generate random German 'translations'"""
+        translations = []
+
         for sentence in X_test:
-            result = self.translator(sentence)[0]['translation_text']
-            translations.append(result)
+            # Generate random translation with 3-7 words
+            num_words = random.randint(3, 7)
+            translation = " ".join(random.choices(self.german_words, k=num_words))
+            translations.append(translation)
+
         return np.array(translations, dtype=object)
 ```
+
+**Expected BLEU scores:**
+- Random baseline: ~0-5 BLEU
+- Good model: 40-60 BLEU
+- Excellent model: 60+ BLEU
 
 ## Dataset Format
 
@@ -115,7 +185,7 @@ The dataset JSON file has this structure:
 
 ## Competition Workflow
 
-1. **Agent loads pre-trained model** (e.g., `Helsinki-NLP/opus-mt-en-de`)
+1. **Agent loads pre-trained model** (PyTorch, TensorFlow, etc.)
 2. **Environment provides English sentences** via `get_next_task()`
 3. **Agent translates** sentences via `predict(X_test)`
 4. **Environment evaluates** quality via `evaluate(predictions, references)`
@@ -123,62 +193,36 @@ The dataset JSON file has this structure:
 
 ## Evaluation Metric
 
-The environment uses a simplified token-overlap F1 score:
+The environment uses **BLEU (Bilingual Evaluation Understudy)** score via the `sacrebleu` library.
 
-```
-Precision = |predicted_tokens ∩ reference_tokens| / |predicted_tokens|
-Recall    = |predicted_tokens ∩ reference_tokens| / |reference_tokens|
-F1        = 2 * (Precision * Recall) / (Precision + Recall)
+**What is BLEU?**
+- Standard metric for machine translation quality
+- Measures n-gram overlap between predictions and references
+- Score range: 0-100 (higher is better)
+- Industry standard used in MT research and competitions
+
+**Implementation:**
+```python
+from sacrebleu import corpus_bleu
+
+# sacrebleu handles tokenization, smoothing, and scoring
+bleu = corpus_bleu(predictions, [references])
+score = bleu.score  # 0-100
 ```
 
-**For production:** Replace with proper MT metrics (BLEU, chrF, COMET, etc.)
+**Interpretation:**
+- **60-100:** Excellent translation (near human quality)
+- **40-60:** Good translation (understandable, mostly correct)
+- **20-40:** Fair translation (partially understandable)
+- **0-20:** Poor translation (barely recognizable)
+
+**For advanced competitions:** Consider adding chrF, COMET, or TER metrics alongside BLEU
 
 ## Versioning
 
-Current version: **0.1**
+Current version: **0.2**
 
-To increment version:
-```bash
-# From envs_development directory
-make tag-version ENV_NAME=translate
-```
+**Changelog:**
+- v0.2: Replaced token overlap with BLEU metric (sacrebleu)
+- v0.1: Initial release with token overlap metric
 
-## ML-Arena Integration
-
-### Local Testing
-
-Copy to storage for local testing:
-```bash
-# From envs_development directory
-make dev-copy ENV_NAME=translate
-```
-
-### Docker Image
-
-The environment is installed in the base Docker image:
-```dockerfile
-# imagemanager/custom_images/base/Dockerfile.jinja
-RUN pip install git+https://github.com/ml-arena/translate.git@translate_v0.1
-```
-
-## Differences from PermutedMNIST
-
-| Aspect | PermutedMNIST | Translate |
-|--------|---------------|-----------|
-| **Workflow** | Train + Predict | Predict-only |
-| **Training data** | Provided (X_train, y_train) | NOT provided |
-| **Agent type** | Trains during competition | Uses pre-trained model |
-| **Task type** | Meta-learning | Zero-shot evaluation |
-| **Data type** | Numpy arrays (images) | Text (strings) |
-| **Metric** | Classification accuracy | Translation F1 (token overlap) |
-
-## Notes
-
-- **No training allowed:** Agents cannot call any `train()` method during competition
-- **Pre-trained models:** Agents must load models before competition starts
-- **Public dataset:** Current dataset is public for testing; use private for competitions
-- **Simple metric:** Token overlap is simple; consider BLEU/chrF for production
-
-## License
-
-MIT License - Public domain dataset for testing purposes.
