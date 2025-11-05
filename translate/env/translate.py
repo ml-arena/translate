@@ -27,27 +27,53 @@ class TranslateEnv:
     and evaluates the quality of German translations.
     """
 
-    def __init__(self, number_episodes: int = 20):
+    def __init__(
+        self,
+        batch_size: int = 10,
+        dataset_path: Optional[str] = None,
+        dataset: Optional[Dict[str, Any]] = None
+    ):
         """
         Initialize the translation environment
 
         Args:
-            number_episodes: Number of translation tasks to evaluate
+            batch_size: Number of translation pairs per batch
+                       The dataset will be split into batches of this size
+            dataset_path: Optional path to custom dataset JSON file
+                         If provided, loads dataset from this path
+            dataset: Optional pre-loaded dataset dictionary with 'pairs' key
+                    If provided, uses this dataset directly
+
+        Note: If both dataset_path and dataset are provided, dataset takes precedence.
+              If neither is provided, uses default en_de_dataset.json
         """
-        self.number_episodes = number_episodes
-        self.current_episode = 0
+        self.batch_size = batch_size
+        self.current_batch = 0
         self.rng = np.random.RandomState()
 
-        # Load translation dataset
-        data_path = os.path.join(PKG_DIR, 'data')
-        try:
-            with open(os.path.join(data_path, 'en_de_dataset.json'), 'r', encoding='utf-8') as f:
-                self.dataset = json.load(f)
-        except (FileNotFoundError, OSError) as e:
-            raise RuntimeError(
-                "Translation dataset not found. Please run the data preparation script first:\n"
-                "python tools/prepare_data.py"
-            ) from e
+        # Load translation dataset with priority: dataset > dataset_path > default
+        if dataset is not None:
+            # Use pre-loaded dataset
+            self.dataset = dataset
+        elif dataset_path is not None:
+            # Load from custom path
+            try:
+                with open(dataset_path, 'r', encoding='utf-8') as f:
+                    self.dataset = json.load(f)
+            except (FileNotFoundError, OSError) as e:
+                raise RuntimeError(
+                    f"Translation dataset not found at: {dataset_path}"
+                ) from e
+        else:
+            # Load default dataset
+            data_path = os.path.join(PKG_DIR, 'data')
+            try:
+                with open(os.path.join(data_path, 'en_de_dataset.json'), 'r', encoding='utf-8') as f:
+                    self.dataset = json.load(f)
+            except (FileNotFoundError, OSError) as e:
+                raise RuntimeError(
+                    "Default translation dataset not found. Please ensure the package is installed correctly."
+                ) from e
 
         # Validate dataset structure
         if 'pairs' not in self.dataset:
@@ -59,8 +85,8 @@ class TranslateEnv:
         if self.total_pairs == 0:
             raise RuntimeError("Dataset is empty")
 
-        # Calculate samples per task
-        self.samples_per_task = max(10, self.total_pairs // number_episodes)
+        # Calculate total number of batches
+        self.num_batches = (self.total_pairs + self.batch_size - 1) // self.batch_size  # Ceiling division
 
         # Track current task data
         self.current_test_data = None
@@ -72,37 +98,37 @@ class TranslateEnv:
 
     def get_next_task(self) -> Optional[Dict[str, Any]]:
         """
-        Get the next translation task (predict-only mode)
+        Get the next translation batch (predict-only mode)
+
+        The dataset is split into batches of size batch_size.
+        This method returns batches sequentially, ensuring all pairs are evaluated exactly once.
 
         Returns:
             Dictionary with:
-                - X_test: List of English sentences to translate
+                - X_test: Batch of English sentences to translate
                 - y_test: Reference German translations (for evaluation only)
-            Returns None when all episodes are complete
+            Returns None when all batches are complete
         """
-        if self.current_episode >= self.number_episodes:
+        if self.current_batch >= self.num_batches:
             return None
 
-        # Sample random sentences for this task
-        indices = self.rng.choice(
-            self.total_pairs,
-            size=min(self.samples_per_task, self.total_pairs),
-            replace=False
-        )
+        # Calculate batch boundaries
+        start_idx = self.current_batch * self.batch_size
+        end_idx = min(start_idx + self.batch_size, self.total_pairs)
 
-        # Extract English sentences and German references
+        # Extract English sentences and German references for this batch
         english_sentences = []
         german_references = []
 
-        for idx in indices:
-            pair = self.pairs[int(idx)]
+        for idx in range(start_idx, end_idx):
+            pair = self.pairs[idx]
             english_sentences.append(pair['en'])
             german_references.append(pair['de'])
 
         # Store references for evaluation
         self.current_references = german_references
 
-        self.current_episode += 1
+        self.current_batch += 1
 
         # Return task in predict-only format (no X_train, y_train)
         return {
@@ -144,11 +170,11 @@ class TranslateEnv:
         return float(bleu.score)
 
     def reset(self):
-        """Reset environment for new set of episodes"""
-        self.current_episode = 0
+        """Reset environment to start from first batch"""
+        self.current_batch = 0
         self.current_test_data = None
         self.current_references = None
 
     def is_complete(self) -> bool:
-        """Check if all episodes are complete"""
-        return self.current_episode >= self.number_episodes
+        """Check if all batches are complete"""
+        return self.current_batch >= self.num_batches
