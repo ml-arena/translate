@@ -76,7 +76,6 @@ from agent import Agent  # Your agent implementation
 # Initialize environment and agent
 env = Env(batch_size=10)
 agent = Agent()
-agent.reset()
 
 # Run evaluation
 total_score = 0
